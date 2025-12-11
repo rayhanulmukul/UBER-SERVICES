@@ -1,0 +1,2 @@
+### Get Rider Coordinates
+GET http://localhost:3002 /rider-coordinates
