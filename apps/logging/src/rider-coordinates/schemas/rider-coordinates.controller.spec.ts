@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RiderCoordinatesController } from './rider-coordinates.controller';
+import { RiderCoordinatesController } from '../rider-coordinates.controller';
 
 describe('RiderCoordinatesController', () => {
   let controller: RiderCoordinatesController;

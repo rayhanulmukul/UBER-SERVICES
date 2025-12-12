@@ -1,5 +1,5 @@
 ### Get Rider Coordinates
-GET http://localhost:3002/rider-coordinates
+GET http://localhost:3002/rider-coordinates/rider123
 
 ### Post Rider Coordinates
 POST http://localhost:3002/rider-coordinates
