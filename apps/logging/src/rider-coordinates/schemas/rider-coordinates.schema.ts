@@ -1,10 +1,10 @@
 import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
-import {HydrateDocument} from 'mongoose';
+import {HydratedDocument} from 'mongoose';
 
-export type RiderCoordinatesDocument = HydrateDocument<RiderCoordinates>;
+export type RiderCoordinatesDocument = HydratedDocument<RiderCoordinate>;
 
 @Schema()
-class RiderCoordinateSchema{
+class RiderCoordinate{
     @Prop({reguired: true})
     lat: number;
 
@@ -15,4 +15,4 @@ class RiderCoordinateSchema{
     rider: string;
 }
 
-export const RiderCoordinateSchemaFactory = SchemaFactory.createForClass(RiderCoordinateSchema); 
+export const RiderCoordinateSchemaFactory = SchemaFactory.createForClass(RiderCoordinate); 
