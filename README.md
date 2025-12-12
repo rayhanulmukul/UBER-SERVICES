@@ -23,28 +23,131 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+A microservices-based ride-sharing application built with NestJS, featuring a logging service for tracking rider coordinates and a rider microservice for managing rider information.
 
-## Project setup
+## Architecture
+
+This project consists of three main applications:
+
+### 1. Logging Service (Port 3002)
+- **REST API** for managing rider coordinates
+- Stores coordinate data in MongoDB
+- Communicates with Rider microservice via TCP
+- Endpoints:
+  - `GET /rider-coordinates/:id` - Get rider info and their coordinates
+  - `POST /rider-coordinates` - Save new rider coordinates
+
+### 2. Rider Microservice (Port 3001)
+- **TCP-based microservice** for rider data
+- Provides rider information to other services
+- Message Pattern: `{ cmd: 'getRiderByID' }`
+
+### 3. UBER-SERVICES
+- Main application entry point
+
+## Prerequisites
+
+- Node.js (v18 or higher)
+- Docker and Docker Compose
+- MongoDB (via Docker)
+
+## Project Setup
 
 ```bash
+# Install dependencies
 $ npm install
 ```
 
-## Compile and run the project
+## Database Setup
+
+Start MongoDB using Docker Compose:
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+# Start MongoDB container
+$ docker compose up -d mongo
 ```
 
-## Run tests
+MongoDB will be available at `localhost:27017` with credentials:
+- Username: `root`
+- Password: `root`
+
+## Running the Applications
+
+```bash
+# Start Logging Service (port 3002)
+$ npm run start:dev logging
+
+# Start Rider Microservice (port 3001)
+$ npm run start:dev rider
+
+# Start main UBER-SERVICES
+$ npm run start:dev UBER-SERVICES
+```
+
+## API Usage
+
+### Testing with REST Client
+
+Use the `rest.http` file with VS Code REST Client extension:
+
+```http
+### Get Rider Coordinates
+GET http://localhost:3002/rider-coordinates/rider123
+
+### Post Rider Coordinates
+POST http://localhost:3002/rider-coordinates
+Content-Type: application/json
+
+{
+  "lat": 37.7749,
+  "lng": -122.4194,
+  "rider": "rider123"
+}
+```
+
+### Testing with cURL
+
+```bash
+# Get rider coordinates
+$ curl http://localhost:3002/rider-coordinates/rider123
+
+# Create new coordinates
+$ curl -X POST http://localhost:3002/rider-coordinates \
+  -H "Content-Type: application/json" \
+  -d '{"lat": 37.7749, "lng": -122.4194, "rider": "rider123"}'
+```
+
+## Project Structure
+
+```
+apps/
+├── logging/                  # Logging Service (REST API)
+│   └── src/
+│       ├── rider-coordinates/
+│       │   ├── dto/
+│       │   ├── schemas/
+│       │   ├── rider-coordinates.controller.ts
+│       │   ├── rider-coordinates.service.ts
+│       │   └── rider-coordinates.module.ts
+│       └── main.ts
+├── rider/                    # Rider Microservice (TCP)
+│   └── src/
+│       ├── rider.controller.ts
+│       ├── rider.service.ts
+│       ├── rider.module.ts
+│       └── main.ts
+└── UBER-SERVICES/           # Main Application
+```
+
+## Technologies Used
+
+- **NestJS** - Progressive Node.js framework
+- **MongoDB** - Document database with Mongoose ODM
+- **Microservices** - TCP-based inter-service communication
+- **TypeScript** - Type-safe development
+- **Docker** - Containerization
+
+## Run Tests
 
 ```bash
 # unit tests
